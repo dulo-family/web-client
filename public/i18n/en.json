@@ -7,5 +7,48 @@
     "system": "System",
     "light": "Light",
     "dark": "Dark"
+  },
+  "auth": {
+    "signingIn": "Signing you in…"
+  },
+  "home": {
+    "signedInAs": "Signed in as {name}",
+    "signIn": "Sign in",
+    "signOut": "Sign out"
+  },
+  "signIn": {
+    "title": "Sign in",
+    "with": "Continue with {provider}",
+    "failed": "Sign-in didn’t work. Please try again.",
+    "loading": "Loading the sign-in options…",
+    "noProviders": "This server has no sign-in options set up.",
+    "retry": "Try again"
+  },
+  "setup": {
+    "pending": {
+      "title": "Dulo isn’t set up yet",
+      "text": "The setup wizard will guide you through it."
+    }
+  },
+  "problem": {
+    "unknown": "Something went wrong. Please try again.",
+    "network": "Can’t reach the Dulo server. Check your connection and try again.",
+    "account-disabled": "Your account is disabled.",
+    "account-pending": "Your account is waiting for an administrator’s approval.",
+    "concurrent-modification": "Someone else changed this in the meantime. Reload to see their changes.",
+    "feature-disabled": "This feature is turned off.",
+    "forbidden": "You don’t have permission to do this.",
+    "has-links": "This is still linked to other records.",
+    "invalid-setup-token": "The setup token is wrong.",
+    "not-found": "This doesn’t exist, or no longer exists.",
+    "precondition-required": "This change is missing its version. Reload and try again.",
+    "restore-conflict": "This version can’t be restored because it conflicts with the current data.",
+    "role-exists": "A role with this key already exists.",
+    "role-in-use": "This role is still in use.",
+    "setup-completed": "The setup is already complete.",
+    "setup-required": "Dulo isn’t set up yet.",
+    "tree-not-initialized": "The family tree hasn’t been created yet.",
+    "unauthorized": "Please sign in again.",
+    "validation": "Some values are invalid."
   }
 }

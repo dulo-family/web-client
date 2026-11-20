@@ -21,7 +21,8 @@
     "test:watch": "ng test",
     "lint": "ng lint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "api:types": "openapi-typescript ../server/api/openapi.json -o src/app/core/api/schema.d.ts && prettier --write src/app/core/api/schema.d.ts"
   },
   "dependencies": {
     "@angular/cdk": "^22.3.0",
@@ -46,6 +47,7 @@
     "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
     "jsdom": "^31.0.0",
+    "openapi-typescript": "^7.13.0",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",
     "typescript-eslint": "8.73.0",
@@ -56,5 +58,10 @@
     "esbuild": false,
     "lmdb": false,
     "msgpackr-extract": false
+  },
+  "overrides": {
+    "openapi-typescript": {
+      "typescript": "$typescript"
+    }
   }
 }

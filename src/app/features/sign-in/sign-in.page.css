@@ -1,0 +1,32 @@
+.sign-in {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-5);
+  max-width: 28rem;
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-4);
+  text-align: center;
+}
+
+.brand {
+  font-size: var(--text-display);
+}
+
+h1 {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-medium);
+}
+
+.providers {
+  display: grid;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.muted {
+  color: var(--color-text-muted);
+}
+
+.error {
+  color: var(--color-danger);
+}

@@ -1,0 +1,13 @@
+<main class="home">
+  <h1><dulo-wordmark /></h1>
+  @if (auth.signedIn()) {
+    @if (name(); as name) {
+      <p>{{ 'home.signedInAs' | transloco: { name } }}</p>
+    }
+    <button duloButton variant="secondary" type="button" (click)="auth.signOut()">
+      {{ 'home.signOut' | transloco }}
+    </button>
+  } @else {
+    <a duloButton routerLink="/sign-in">{{ 'home.signIn' | transloco }}</a>
+  }
+</main>

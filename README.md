@@ -4,8 +4,8 @@ Dulo is a self-hosted app for managing family trees. This repository holds the *
 Angular app people use in the browser. It talks to the
 [Dulo server](https://github.com/dulo-family/dulo-server) through its REST API.
 
-> **Status:** early development. The project scaffold is in place; theming, translations, sign-in
-> and the setup wizard are coming next.
+> **Status:** early development. Theming, translations (English and Bulgarian) and sign-in are in
+> place; the setup wizard is coming next.
 
 Dulo ships as one Docker image with the server and the web client. This repository will build that
 image.
@@ -38,15 +38,16 @@ You need Node.js 26 (see `.nvmrc`) and a running Dulo server with its dev config
 
 ### Scripts
 
-| Command                | What it does                                |
-| ---------------------- | ------------------------------------------- |
-| `npm start`            | Dev server on http://localhost:5173         |
-| `npm test`             | Unit tests (Vitest), once                   |
-| `npm run test:watch`   | Unit tests in watch mode                    |
-| `npm run lint`         | ESLint for TypeScript and templates         |
-| `npm run format`       | Format everything with Prettier             |
-| `npm run format:check` | Check formatting, as CI does                |
-| `npm run build`        | Production build in `dist/dulo-web/browser` |
+| Command                | What it does                                               |
+| ---------------------- | ---------------------------------------------------------- |
+| `npm start`            | Dev server on http://localhost:5173                        |
+| `npm test`             | Unit tests (Vitest), once                                  |
+| `npm run test:watch`   | Unit tests in watch mode                                   |
+| `npm run lint`         | ESLint for TypeScript and templates                        |
+| `npm run format`       | Format everything with Prettier                            |
+| `npm run format:check` | Check formatting, as CI does                               |
+| `npm run build`        | Production build in `dist/dulo-web/browser`                |
+| `npm run api:types`    | Regenerate the API types from `../server/api/openapi.json` |
 
 ## Contributing
 

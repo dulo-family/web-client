@@ -1,18 +1,7 @@
 .app-bar {
   display: flex;
-  justify-content: flex-end;
   flex-wrap: wrap;
+  justify-content: flex-end;
   gap: var(--space-3);
   padding: var(--space-4);
-}
-
-.placeholder {
-  display: grid;
-  place-items: center;
-  padding: var(--space-8) var(--space-4);
-  font-size: var(--text-display);
-}
-
-.placeholder h1 {
-  font-size: inherit;
 }

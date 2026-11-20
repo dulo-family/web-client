@@ -1,0 +1,11 @@
+.home {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-5);
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+}
+
+h1 {
+  font-size: var(--text-display);
+}

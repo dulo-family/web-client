@@ -1,0 +1,33 @@
+<main class="sign-in">
+  <dulo-wordmark class="brand" />
+  <h1>{{ 'signIn.title' | transloco }}</h1>
+
+  @if (failed) {
+    <p class="error" role="alert">{{ 'signIn.failed' | transloco }}</p>
+  }
+
+  @if (providers.isLoading()) {
+    <p class="muted" role="status">{{ 'signIn.loading' | transloco }}</p>
+  } @else if (loadError(); as error) {
+    <p class="error" role="alert">{{ error }}</p>
+    <button duloButton variant="secondary" type="button" (click)="providers.reload()">
+      {{ 'signIn.retry' | transloco }}
+    </button>
+  } @else {
+    <div class="providers">
+      @for (provider of providers.value() ?? []; track provider.id) {
+        <button
+          duloButton
+          size="large"
+          type="button"
+          [disabled]="starting() !== null"
+          (click)="signIn(provider)"
+        >
+          {{ 'signIn.with' | transloco: { provider: provider.displayName } }}
+        </button>
+      } @empty {
+        <p class="muted">{{ 'signIn.noProviders' | transloco }}</p>
+      }
+    </div>
+  }
+</main>

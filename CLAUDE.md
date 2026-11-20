@@ -20,6 +20,10 @@ usually checked out at `../server` (start Claude Code with `claude --add-dir ../
 - `npm run lint`: angular-eslint
 - `npm run format` / `npm run format:check`: Prettier
 - `npm run build`: production build in `dist/dulo-web/browser`
+- `npm run api:types`: regenerates `src/app/core/api/schema.d.ts` from
+  `../server/api/openapi.json` (checked in; run it when the server's API changes).
+  `openapi-typescript` declares TypeScript 5 as a peer, so an `overrides` entry in `package.json`
+  lets it use the project's TypeScript.
 
 CI (`.github/workflows/ci.yml`) runs lint, format check, tests and build on pull requests only.
 
@@ -69,5 +73,14 @@ public/i18n/ translations (en, bg)
   from `provideI18nTesting()` in `src/testing/i18n.ts`.
 - API errors are RFC 9457 problem details with `urn:dulo:problem:*` types; translate by `type`,
   never show the server's English `title` when a translation exists.
+- API calls: build URLs with `apiUrl(inject(API_BASE_URL), '/path')` (`src/app/core/api/api.ts`;
+  the base is `''` in production, `http://localhost:8080` in development via
+  `src/environments`). Use the generated types (`Schemas['MeResponse']`, aliases in `api.ts`).
+  Prefer `httpResource` for reads. Show errors with `ProblemMessages.message(error)`, which
+  translates `problem.<code>` and covers network errors.
+- Auth (`src/app/core/auth`): `AuthService.signIn(providerId, returnTo)` always sends `idp=`;
+  `authInterceptor` adds the token to `${API_BASE_URL}/api/` calls only, refreshes before expiry
+  and once after a 401. Refresh tokens live in localStorage (`dulo.auth.refreshToken`), access
+  and ID tokens in memory. Tests replace full-page navigation through `BROWSER_LOCATION`.
 - American English in code and in `en.json`.
 - Branches: `feat/`, `fix/`, `chore/`; PRs close their issue with `Closes #n`.

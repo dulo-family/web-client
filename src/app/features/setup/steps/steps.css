@@ -1,0 +1,154 @@
+.lead {
+  font-size: var(--text-lg);
+}
+
+.muted {
+  color: var(--color-text-muted);
+}
+
+.error-text {
+  color: var(--color-danger);
+}
+
+.log,
+.yaml {
+  overflow-x: auto;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.yaml {
+  max-height: 36rem;
+  line-height: var(--leading-normal);
+}
+
+.result {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.result {
+  justify-items: start;
+}
+
+.result-body {
+  display: grid;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.legend {
+  font-size: var(--text-sm);
+}
+
+.legend s,
+.sources s {
+  color: var(--color-text-muted);
+}
+
+.sources {
+  color: var(--color-text-muted);
+}
+
+.sources .source {
+  color: var(--color-accent);
+  font-weight: var(--weight-bold);
+}
+
+.card {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.choices {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-5);
+  padding: 0;
+  list-style: none;
+}
+
+.locked {
+  margin-inline-start: calc(3rem + var(--space-4));
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.section {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.section h2 {
+  font-size: var(--text-lg);
+}
+
+.section h3 {
+  font-size: var(--text-base);
+}
+
+.plain {
+  display: grid;
+  gap: var(--space-1);
+  padding: 0;
+  list-style: none;
+}
+
+details.card summary {
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+}
+
+.permissions {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-1) var(--space-4);
+}
+
+.permissions dd {
+  color: var(--color-text-muted);
+}
+
+.summary {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-1) var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.row dt {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.row dd {
+  grid-column: 1;
+  overflow-wrap: anywhere;
+}
+
+.row .edit {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+}
+
+.multiline {
+  white-space: pre-line;
+}

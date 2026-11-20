@@ -24,6 +24,9 @@ export class SignInPage {
   private readonly query = inject(ActivatedRoute).snapshot.queryParamMap;
   private readonly base = inject(API_BASE_URL);
 
+  private readonly returnTo =
+    this.query.get('returnTo') ?? this.auth.takeReturnAfterSignOut() ?? '/';
+
   protected readonly failed = this.query.get('error') === 'sign-in-failed';
   protected readonly providers = httpResource<IdentityProvider[]>(() =>
     apiUrl(this.base, '/identity-providers'),
@@ -37,6 +40,6 @@ export class SignInPage {
 
   protected async signIn(provider: IdentityProvider): Promise<void> {
     this.starting.set(provider.id);
-    await this.auth.signIn(provider.id, this.query.get('returnTo') ?? '/');
+    await this.auth.signIn(provider.id, this.returnTo);
   }
 }

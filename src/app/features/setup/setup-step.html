@@ -1,0 +1,24 @@
+<form class="step" novalidate (submit)="submit($event)">
+  <h1 #heading class="title" tabindex="-1">{{ title() }}</h1>
+
+  @if (error(); as error) {
+    <p class="error" role="alert">{{ error }}</p>
+  }
+
+  <div class="content">
+    <ng-content />
+  </div>
+
+  <div class="actions">
+    @if (back(); as back) {
+      <a duloButton variant="secondary" [routerLink]="['/setup', back]">
+        {{ 'setup.back' | transloco }}
+      </a>
+    }
+    @if (showContinue()) {
+      <button duloButton size="large" type="submit" class="continue" [disabled]="busy()">
+        {{ continueLabel() ?? ('setup.continue' | transloco) }}
+      </button>
+    }
+  </div>
+</form>

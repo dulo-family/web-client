@@ -82,5 +82,17 @@ public/i18n/ translations (en, bg)
   `authInterceptor` adds the token to `${API_BASE_URL}/api/` calls only, refreshes before expiry
   and once after a 401. Refresh tokens live in localStorage (`dulo.auth.refreshToken`), access
   and ID tokens in memory. Tests replace full-page navigation through `BROWSER_LOCATION`.
+- Setup wizard (`src/app/features/setup`): one route per step (`/setup/<step>`, `SETUP_STEPS`
+  in `setup.store.ts`), each wrapped in `<dulo-setup-step>` (form, Enter continues, focus on the
+  `[data-autofocus]` field, Back/Continue, errors sent back by later steps). `SetupStore` holds
+  the state in signals, mirrored to sessionStorage (`dulo.setup`) so it survives the sign-in
+  redirects; `setupStepGuard` only opens a step when every earlier step is valid.
+  On request, the review step shows the server's configuration (`GET /setup/config`) merged
+  with the wizard's values (`merged-configuration.ts`; the `yaml` library loads only then).
+  Each value's comment is read as a source chain (`default → file x → environment variable Y`,
+  `→` or `->`); all but the last source render struck through, and values the wizard sets end
+  in `this setup`.
+- Grid layouts that hold long unbreakable content (YAML, ids) use `minmax(0, 1fr)` columns, or
+  the content widens the page.
 - American English in code and in `en.json`.
 - Branches: `feat/`, `fix/`, `chore/`; PRs close their issue with `Closes #n`.

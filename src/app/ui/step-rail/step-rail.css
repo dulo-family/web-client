@@ -1,0 +1,62 @@
+.rail {
+  display: grid;
+  gap: var(--space-1);
+  padding: 0;
+  list-style: none;
+}
+
+.entry {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: none;
+  color: var(--color-text-muted);
+  text-align: start;
+}
+
+button.entry {
+  cursor: pointer;
+}
+
+button.entry:hover {
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+}
+
+.marker {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.done .marker {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  font-weight: var(--weight-bold);
+}
+
+.done .entry {
+  color: var(--color-text);
+}
+
+.current .entry {
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  font-weight: var(--weight-medium);
+}
+
+.current .marker {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}

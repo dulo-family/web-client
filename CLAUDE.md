@@ -57,6 +57,16 @@ public/i18n/ translations (en, bg)
   stylesheet is small and render-blocking, so the splash and the stored theme paint correctly
   from the first frame.
 - Wrap every `localStorage`/`sessionStorage` access in try/catch; storage can be blocked.
+- Every user-facing text comes from `public/i18n/<lang>.json` through Transloco (`| transloco`
+  pipe or `TranslocoService`). Keys are nested by area (`setup.token.title`,
+  `problem.invalid-setup-token`, `feature.people.name`). Messages are ICU MessageFormat: use
+  `{name}` placeholders, `plural` and `select`, never Transloco's `{{ }}` syntax, so the files stay
+  usable on any translation platform. Add each key to every language;
+  `src/app/core/i18n/translations.spec.ts` fails on missing keys or messages that don't parse.
+- Languages are listed in `src/app/core/i18n/languages.ts`. `LocaleService` picks the start
+  language (stored `dulo.lang`, else the browser's languages, else English), loads it before the
+  first render and keeps `<html lang>` in sync. Component tests get Transloco with the real files
+  from `provideI18nTesting()` in `src/testing/i18n.ts`.
 - API errors are RFC 9457 problem details with `urn:dulo:problem:*` types; translate by `type`,
   never show the server's English `title` when a translation exists.
 - American English in code and in `en.json`.

@@ -1,0 +1,22 @@
+<button type="button" class="trigger" [cdkMenuTriggerFor]="menu">
+  <span class="visually-hidden">{{ 'language.label' | transloco }}: </span>
+  <span [attr.lang]="current().id">{{ current().label }}</span>
+  <span class="chevron" aria-hidden="true"></span>
+</button>
+
+<ng-template #menu>
+  <div class="menu" cdkMenu [attr.aria-label]="'language.label' | transloco">
+    @for (language of locale.languages; track language.id) {
+      <button
+        type="button"
+        class="item"
+        cdkMenuItemRadio
+        [cdkMenuItemChecked]="language.id === locale.active()"
+        (cdkMenuItemTriggered)="locale.set(language.id)"
+        [attr.lang]="language.id"
+      >
+        {{ language.label }}
+      </button>
+    }
+  </div>
+</ng-template>

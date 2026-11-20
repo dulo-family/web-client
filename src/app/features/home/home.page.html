@@ -1,13 +1,26 @@
 <main class="home">
-  <h1><dulo-wordmark /></h1>
-  @if (auth.signedIn()) {
+  <dulo-wordmark class="brand" />
+
+  @if (treeValue(); as tree) {
+    <h1>{{ tree.name }}</h1>
+    @if (tree.description; as description) {
+      <p class="description">{{ description }}</p>
+    }
+  } @else if (treeError(); as error) {
+    <p class="error" role="alert">{{ error }}</p>
+    <button duloButton variant="secondary" type="button" (click)="reload()">
+      {{ 'home.retry' | transloco }}
+    </button>
+  } @else {
+    <p class="muted" role="status">{{ 'home.loading' | transloco }}</p>
+  }
+
+  <footer class="account">
     @if (name(); as name) {
-      <p>{{ 'home.signedInAs' | transloco: { name } }}</p>
+      <p class="muted">{{ 'home.signedInAs' | transloco: { name } }}</p>
     }
     <button duloButton variant="secondary" type="button" (click)="auth.signOut()">
       {{ 'home.signOut' | transloco }}
     </button>
-  } @else {
-    <a duloButton routerLink="/sign-in">{{ 'home.signIn' | transloco }}</a>
-  }
+  </footer>
 </main>

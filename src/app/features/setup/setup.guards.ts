@@ -18,7 +18,7 @@ export const setupStepGuard: CanActivateFn = (route) => {
 export const resumeSetup: RedirectFunction = () => `/setup/${inject(SetupStore).resumeStep()}`;
 
 /** The done page only makes sense right after the setup finished. */
-export const setupDoneGuard: CanActivateFn = () =>
+export const setupJustFinishedGuard: CanActivateFn = () =>
   inject(SetupStore).finishedTreeName() !== null || inject(Router).createUrlTree(['/']);
 
 export function isSetupStep(value: string | undefined): value is SetupStepId {

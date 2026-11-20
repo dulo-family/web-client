@@ -1,0 +1,41 @@
+<div class="setup">
+  <aside class="sidebar">
+    <dulo-wordmark class="brand" />
+
+    <button
+      type="button"
+      class="compact"
+      aria-controls="setup-steps"
+      [attr.aria-expanded]="railOpen()"
+      (click)="railOpen.set(!railOpen())"
+    >
+      <span>
+        {{
+          'setup.progress'
+            | transloco: { current: currentIndex() + 1, total: total, name: currentLabel() }
+        }}
+      </span>
+      <span class="chevron" aria-hidden="true"></span>
+    </button>
+    <div class="progress" aria-hidden="true">
+      <span class="progress-fill" [style.width.%]="((currentIndex() + 1) / total) * 100"></span>
+    </div>
+
+    <nav
+      id="setup-steps"
+      class="steps"
+      [class.open]="railOpen()"
+      [attr.aria-label]="'setup.stepsLabel' | transloco"
+    >
+      <dulo-step-rail
+        [steps]="steps()"
+        [doneLabel]="'setup.stepDone' | transloco"
+        (selected)="open($event)"
+      />
+    </nav>
+  </aside>
+
+  <main class="content">
+    <router-outlet />
+  </main>
+</div>

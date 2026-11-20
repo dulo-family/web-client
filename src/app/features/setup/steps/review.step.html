@@ -1,0 +1,103 @@
+<dulo-setup-step
+  step="review"
+  [title]="'setup.review.title' | transloco"
+  [continueLabel]="'setup.review.finish' | transloco"
+  [showContinue]="!alreadyDone()"
+  [busy]="busy()"
+  (next)="finish()"
+>
+  @if (error(); as error) {
+    <p class="error-text" role="alert">{{ error }}</p>
+    @if (alreadyDone()) {
+      <a duloButton routerLink="/">{{ 'setup.review.home' | transloco }}</a>
+    }
+  }
+
+  <dl class="summary">
+    <div class="row">
+      <dt>{{ 'setup.steps.sign-in' | transloco }}</dt>
+      <dd>{{ account() ?? '…' }}</dd>
+      <a class="edit" routerLink="/setup/sign-in">
+        {{ 'setup.review.edit' | transloco }}
+        <span class="visually-hidden">{{ 'setup.steps.sign-in' | transloco }}</span>
+      </a>
+    </div>
+    <div class="row">
+      <dt>{{ 'setup.steps.name' | transloco }}</dt>
+      <dd>{{ store.name().trim() }}</dd>
+      <a class="edit" routerLink="/setup/name">
+        {{ 'setup.review.edit' | transloco }}
+        <span class="visually-hidden">{{ 'setup.steps.name' | transloco }}</span>
+      </a>
+    </div>
+    <div class="row">
+      <dt>{{ 'setup.steps.description' | transloco }}</dt>
+      <dd class="multiline">
+        {{ store.description().trim() || ('setup.review.noDescription' | transloco) }}
+      </dd>
+      <a class="edit" routerLink="/setup/description">
+        {{ 'setup.review.edit' | transloco }}
+        <span class="visually-hidden">{{ 'setup.steps.description' | transloco }}</span>
+      </a>
+    </div>
+    <div class="row">
+      <dt>{{ 'setup.steps.features' | transloco }}</dt>
+      <dd>
+        @for (key of enabledFeatures(); track key; let last = $last) {
+          {{ 'feature.' + key + '.name' | transloco }}{{ last ? '' : ', ' }}
+        } @empty {
+          {{ 'setup.review.noFeatures' | transloco }}
+        }
+      </dd>
+      <a class="edit" routerLink="/setup/features">
+        {{ 'setup.review.edit' | transloco }}
+        <span class="visually-hidden">{{ 'setup.steps.features' | transloco }}</span>
+      </a>
+    </div>
+    <div class="row">
+      <dt>{{ 'setup.steps.access' | transloco }}</dt>
+      <dd>
+        @if (registrationMode(); as mode) {
+          {{ 'setup.review.registration.' + mode | transloco }}
+        }
+      </dd>
+      <a class="edit" routerLink="/setup/access">
+        {{ 'setup.review.edit' | transloco }}
+        <span class="visually-hidden">{{ 'setup.steps.access' | transloco }}</span>
+      </a>
+    </div>
+  </dl>
+
+  <section class="result">
+    <button
+      duloButton
+      variant="secondary"
+      type="button"
+      aria-controls="setup-result"
+      [attr.aria-expanded]="resultOpen()"
+      (click)="toggleResult()"
+    >
+      {{ (resultOpen() ? 'setup.review.result.hide' : 'setup.review.result.show') | transloco }}
+    </button>
+    @if (resultOpen()) {
+      <div id="setup-result" class="result-body">
+        <p class="muted">{{ 'setup.review.result.intro' | transloco }}</p>
+        <p class="legend">
+          {{ 'setup.review.result.order' | transloco }}
+          <s>default</s> → <s>file</s> → <s>environment variable</s> → this setup
+        </p>
+        @if (resultError(); as error) {
+          <p class="error-text" role="alert">{{ error }}</p>
+          <button duloButton variant="secondary" type="button" (click)="reloadResult()">
+            {{ 'signIn.retry' | transloco }}
+          </button>
+        } @else if (result(); as segments) {
+          <!-- prettier-ignore -->
+          <pre class="yaml" tabindex="0" [attr.aria-label]="'setup.review.result.title' | transloco">@for (segment of segments; track $index) {@if (segment.kind === 'text') {{{ segment.text }}} @else {<span class="sources"># @for (source of segment.sources; track $index; let last = $last) {@if (source.overridden) {<s>{{ source.label }}<span class="visually-hidden"> ({{ 'setup.review.result.overridden' | transloco }})</span></s>} @else {<span class="source">{{ source.label }}</span>}@if (!last) {<span aria-hidden="true"> → </span>}}</span>}}</pre>
+        } @else {
+          <p class="muted" role="status">{{ 'setup.review.result.loading' | transloco }}</p>
+        }
+      </div>
+    }
+  </section>
+</dulo-setup-step>

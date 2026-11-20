@@ -222,6 +222,15 @@ describe('AuthService', () => {
     expect(localStorage.getItem(REFRESH_TOKEN_STORAGE_KEY)).toBeNull();
   });
 
+  it('remembers where the next sign-in should return to after signing out', async () => {
+    await signInAndReturn();
+
+    await auth.signOut('/setup/sign-in');
+
+    expect(auth.takeReturnAfterSignOut()).toBe('/setup/sign-in');
+    expect(auth.takeReturnAfterSignOut()).toBeNull();
+  });
+
   it('goes to the sign-in page when there is no ID token to sign out with', async () => {
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
 

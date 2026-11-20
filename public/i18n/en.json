@@ -25,9 +25,97 @@
     "retry": "Try again"
   },
   "setup": {
-    "pending": {
-      "title": "Dulo isn’t set up yet",
-      "text": "The setup wizard will guide you through it."
+    "steps": {
+      "welcome": "Welcome",
+      "token": "Setup token",
+      "sign-in": "Your account",
+      "name": "Tree name",
+      "description": "Description",
+      "features": "Features",
+      "access": "Access",
+      "review": "Review"
+    },
+    "stepsLabel": "Setup steps",
+    "stepDone": "done",
+    "progress": "Step {current} of {total}: {name}",
+    "continue": "Continue",
+    "back": "Back",
+    "welcome": {
+      "title": "Welcome to Dulo",
+      "start": "Start",
+      "intro": "This short setup creates your family tree on this server and makes you its administrator. It takes a few minutes, and you can change everything later.",
+      "token": "You’ll need the setup token. The server prints it in its log on every start until the setup is done, in a line like this one (or it’s the value of dulo.setup.token in the server configuration):"
+    },
+    "token": {
+      "title": "Enter the setup token",
+      "label": "Setup token",
+      "hint": "Copy it from the server log.",
+      "required": "Enter the setup token.",
+      "invalid": "That’s not the setup token. Check the server log and try again."
+    },
+    "signIn": {
+      "title": "Sign in",
+      "intro": "Sign in with the account you’ll use for Dulo. This account becomes the tree’s administrator, with full access.",
+      "signedInAs": "Signed in as {name}",
+      "another": "Use another account",
+      "required": "Sign in to continue."
+    },
+    "name": {
+      "title": "Name your tree",
+      "label": "Tree name",
+      "hint": "For example “The Smith family”. You can change it later.",
+      "required": "Enter a name of up to 200 characters."
+    },
+    "description": {
+      "title": "Describe your tree",
+      "label": "Description (optional)",
+      "hint": "A few words about the tree, for the people you invite."
+    },
+    "features": {
+      "title": "Choose the features",
+      "intro": "Turn on what your family needs. You can change this later.",
+      "locked": "Set by the server configuration."
+    },
+    "access": {
+      "title": "Who gets access",
+      "registration": {
+        "title": "New accounts",
+        "auto": "People who sign in get an account right away, with the roles below.",
+        "approval": "People who sign in wait until an administrator approves them."
+      },
+      "providers": "Roles from sign-in providers",
+      "mapping": "“{claim}” gets {roles}",
+      "defaultRole": "Everyone else gets {role}",
+      "noRoles": "No roles from this provider; an administrator assigns them.",
+      "roles": "Roles",
+      "later": "You can edit the roles later, in the administration."
+    },
+    "review": {
+      "title": "Check and finish",
+      "finish": "Finish setup",
+      "edit": "Edit",
+      "noDescription": "None",
+      "noFeatures": "None",
+      "signInAgain": "Your sign-in has expired. Sign in again, then finish the setup.",
+      "home": "Go to the tree",
+      "registration": {
+        "auto": "New accounts are active right away.",
+        "approval": "New accounts wait for an administrator’s approval."
+      },
+      "result": {
+        "title": "Result",
+        "show": "Show the full configuration",
+        "hide": "Hide the full configuration",
+        "intro": "For the technically curious: everything this Dulo will start with. That’s the server configuration plus your choices from this setup.",
+        "order": "Each value ends with where it comes from. A later source overrides an earlier one, which is then struck through:",
+        "overridden": "overridden",
+        "loading": "Loading the configuration…"
+      }
+    },
+    "done": {
+      "title": "{name} is ready",
+      "text": "You’re its administrator. Invite your family next: they sign in with their own accounts.",
+      "home": "Go to the tree"
     }
   },
   "problem": {
@@ -50,5 +138,55 @@
     "tree-not-initialized": "The family tree hasn’t been created yet.",
     "unauthorized": "Please sign in again.",
     "validation": "Some values are invalid."
+  },
+  "feature": {
+    "people": {
+      "name": "People",
+      "description": "The people in the tree, with their names and details."
+    },
+    "families": {
+      "name": "Families",
+      "description": "Couples and their children."
+    },
+    "events": {
+      "name": "Events",
+      "description": "Births, marriages, deaths and other events."
+    },
+    "places": {
+      "name": "Places",
+      "description": "Where events happened."
+    },
+    "tree-view": {
+      "name": "Tree view",
+      "description": "Ancestor and descendant charts."
+    },
+    "map-view": {
+      "name": "Map",
+      "description": "Places and events on a map."
+    },
+    "timeline": {
+      "name": "Timeline",
+      "description": "Events in the order they happened."
+    },
+    "audit-log": {
+      "name": "Change history",
+      "description": "Who changed what and when, with undo."
+    },
+    "administration": {
+      "name": "Administration",
+      "description": "Users, roles and settings."
+    }
+  },
+  "role": {
+    "admin": "Administrator",
+    "editor": "Editor",
+    "contributor": "Contributor",
+    "viewer": "Viewer"
+  },
+  "access": {
+    "view": "view",
+    "create": "add",
+    "edit": "edit",
+    "delete": "delete"
   }
 }

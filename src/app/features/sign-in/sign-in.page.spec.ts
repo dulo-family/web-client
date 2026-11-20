@@ -22,7 +22,7 @@ describe('SignInPage', () => {
         provideI18nTesting(),
         provideRouter([{ path: 'sign-in', component: SignInPage }]),
         { provide: API_BASE_URL, useValue: 'http://api.test' },
-        { provide: AuthService, useValue: { signIn } },
+        { provide: AuthService, useValue: { signIn, takeReturnAfterSignOut: () => null } },
       ],
     });
   });

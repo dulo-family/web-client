@@ -14,6 +14,8 @@ export const SIGN_IN_PATH = '/sign-in';
 export const REFRESH_TOKEN_STORAGE_KEY = 'dulo.auth.refreshToken';
 /** The sign-in in progress, kept across the redirects to the identity provider. */
 export const PENDING_SIGN_IN_STORAGE_KEY = 'dulo.auth.pending';
+/** Where to go after the next sign-in, when a sign-out asked for it. */
+export const AFTER_SIGN_OUT_STORAGE_KEY = 'dulo.auth.afterSignOut';
 /** Access tokens this close to expiry are refreshed before use. */
 export const EXPIRY_MARGIN_MS = 60_000;
 
@@ -131,10 +133,16 @@ export class AuthService {
     return this.read('local', REFRESH_TOKEN_STORAGE_KEY) !== null;
   }
 
-  /** Forgets the tokens and ends the server's session, which returns to the sign-in page. */
-  async signOut(): Promise<void> {
+  /**
+   * Forgets the tokens and ends the server's session, which returns to the sign-in page. With
+   * `returnTo`, the next sign-in from that page returns there.
+   */
+  async signOut(returnTo?: string): Promise<void> {
     const idToken = this.session()?.idToken;
     this.clear();
+    if (returnTo) {
+      this.store('session', AFTER_SIGN_OUT_STORAGE_KEY, safeReturnTo(returnTo));
+    }
     if (idToken) {
       const params = new URLSearchParams({
         id_token_hint: idToken,
@@ -144,6 +152,13 @@ export class AuthService {
     } else {
       await this.router.navigateByUrl(SIGN_IN_PATH);
     }
+  }
+
+  /** The return address a sign-out left for the next sign-in, once. */
+  takeReturnAfterSignOut(): string | null {
+    const returnTo = this.read('session', AFTER_SIGN_OUT_STORAGE_KEY);
+    this.remove('session', AFTER_SIGN_OUT_STORAGE_KEY);
+    return returnTo;
   }
 
   private async doRefresh(): Promise<string | null> {

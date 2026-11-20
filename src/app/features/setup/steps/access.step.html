@@ -1,0 +1,66 @@
+<dulo-setup-step
+  step="access"
+  [title]="'setup.access.title' | transloco"
+  (next)="navigator.next('access')"
+>
+  @if (defaults(); as defaults) {
+    <section class="section">
+      <h2>{{ 'setup.access.registration.title' | transloco }}</h2>
+      <p>{{ 'setup.access.registration.' + defaults.registrationMode | transloco }}</p>
+    </section>
+
+    <section class="section">
+      <h2>{{ 'setup.access.providers' | transloco }}</h2>
+      @for (provider of providers(); track provider.id) {
+        <div class="card">
+          <h3>{{ provider.displayName }}</h3>
+          <ul class="plain">
+            @for (mapping of provider.mappings; track mapping[0]) {
+              <li>
+                {{
+                  'setup.access.mapping'
+                    | transloco
+                      : {
+                          claim: mapping[0],
+                          roles: (mapping[1] | roleName: roles()),
+                        }
+                }}
+              </li>
+            }
+            @if (provider.defaultRole; as defaultRole) {
+              <li>
+                {{
+                  'setup.access.defaultRole'
+                    | transloco: { role: (defaultRole | roleName: roles()) }
+                }}
+              </li>
+            }
+            @if (provider.mappings.length === 0 && !provider.defaultRole) {
+              <li class="muted">{{ 'setup.access.noRoles' | transloco }}</li>
+            }
+          </ul>
+        </div>
+      }
+    </section>
+
+    <section class="section">
+      <h2>{{ 'setup.access.roles' | transloco }}</h2>
+      @for (role of roles(); track role.key) {
+        <details class="card">
+          <summary>{{ role.key | roleName: roles() }}</summary>
+          <dl class="permissions">
+            @for (permission of role.permissions; track permission.feature) {
+              <dt>{{ 'feature.' + permission.feature + '.name' | transloco }}</dt>
+              <dd>
+                @for (access of permission.access; track access; let last = $last) {
+                  {{ 'access.' + access | transloco }}{{ last ? '' : ', ' }}
+                }
+              </dd>
+            }
+          </dl>
+        </details>
+      }
+      <p class="muted">{{ 'setup.access.later' | transloco }}</p>
+    </section>
+  }
+</dulo-setup-step>

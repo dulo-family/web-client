@@ -1,0 +1,41 @@
+<label class="label" [for]="id">{{ label() }}</label>
+@if (hint(); as hint) {
+  <p class="hint" [id]="id + '-hint'">{{ hint }}</p>
+}
+@if (multiline()) {
+  <textarea
+    class="field"
+    data-autofocus
+    rows="5"
+    [id]="id"
+    [value]="value()"
+    [attr.maxlength]="maxLength() ?? null"
+    [attr.aria-describedby]="describedBy()"
+    [attr.aria-invalid]="error() ? true : null"
+    [attr.spellcheck]="spellcheck()"
+    (input)="onInput($event)"
+  ></textarea>
+} @else {
+  <input
+    class="field"
+    data-autofocus
+    type="text"
+    [class.monospace]="monospace()"
+    [id]="id"
+    [value]="value()"
+    [attr.maxlength]="maxLength() ?? null"
+    [attr.autocomplete]="autocomplete()"
+    [attr.aria-describedby]="describedBy()"
+    [attr.aria-invalid]="error() ? true : null"
+    [attr.spellcheck]="spellcheck()"
+    (input)="onInput($event)"
+  />
+}
+<div class="below">
+  @if (error(); as error) {
+    <p class="error" [id]="id + '-error'">{{ error }}</p>
+  }
+  @if (counter() && maxLength()) {
+    <p class="counter" [id]="id + '-counter'">{{ value().length }} / {{ maxLength() }}</p>
+  }
+</div>

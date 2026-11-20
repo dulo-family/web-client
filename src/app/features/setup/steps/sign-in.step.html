@@ -1,0 +1,43 @@
+<dulo-setup-step
+  step="sign-in"
+  [title]="'setup.signIn.title' | transloco"
+  [showContinue]="auth.signedIn()"
+  (next)="next()"
+>
+  <p class="lead">{{ 'setup.signIn.intro' | transloco }}</p>
+
+  @if (auth.signedIn()) {
+    <div class="card">
+      @if (name(); as name) {
+        <p>{{ 'setup.signIn.signedInAs' | transloco: { name } }}</p>
+      }
+      <button duloButton variant="secondary" type="button" (click)="useAnotherAccount()">
+        {{ 'setup.signIn.another' | transloco }}
+      </button>
+    </div>
+  } @else if (providers.isLoading()) {
+    <p class="muted" role="status">{{ 'signIn.loading' | transloco }}</p>
+  } @else if (providersError(); as error) {
+    <p class="error-text" role="alert">{{ error }}</p>
+    <button duloButton variant="secondary" type="button" (click)="providers.reload()">
+      {{ 'signIn.retry' | transloco }}
+    </button>
+  } @else {
+    <div class="choices">
+      @for (provider of providers.value() ?? []; track provider.id; let first = $first) {
+        <button
+          duloButton
+          size="large"
+          type="button"
+          [attr.data-autofocus]="first ? '' : null"
+          [disabled]="starting()"
+          (click)="signIn(provider)"
+        >
+          {{ 'signIn.with' | transloco: { provider: provider.displayName } }}
+        </button>
+      } @empty {
+        <p class="muted">{{ 'signIn.noProviders' | transloco }}</p>
+      }
+    </div>
+  }
+</dulo-setup-step>

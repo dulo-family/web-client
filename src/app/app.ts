@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { LanguageMenu } from './ui/language-menu/language-menu';
 import { ThemeToggle } from './ui/theme-toggle/theme-toggle';
 import { Wordmark } from './ui/wordmark/wordmark';
 
 @Component({
   selector: 'dulo-root',
-  imports: [RouterOutlet, ThemeToggle, Wordmark],
+  imports: [RouterOutlet, LanguageMenu, ThemeToggle, Wordmark],
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

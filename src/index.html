@@ -5,9 +5,22 @@
     <title>Dulo</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!-- Applies the stored theme before the first paint. Keep in sync with ThemeService. -->
+    <script>
+      try {
+        var theme = localStorage.getItem('dulo.theme');
+        if (theme === 'light' || theme === 'dark') {
+          document.documentElement.dataset.theme = theme;
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
+    <div id="dulo-splash" class="splash" aria-hidden="true">
+      <span class="wordmark">Dulo</span>
+    </div>
     <dulo-root></dulo-root>
   </body>
 </html>

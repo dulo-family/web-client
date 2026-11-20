@@ -1,1 +1,3 @@
-/* Global styles. Design tokens and base styles arrive with the theme work. */
+@import './styles/tokens.css';
+@import './styles/base.css';
+@import './styles/splash.css';

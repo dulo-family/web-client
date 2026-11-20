@@ -1,0 +1,16 @@
+<fieldset class="theme-toggle">
+  <legend class="visually-hidden">{{ 'theme.label' | transloco }}</legend>
+  @for (option of options; track option) {
+    <label class="option" [class.selected]="theme.preference() === option">
+      <input
+        class="visually-hidden"
+        type="radio"
+        name="dulo-theme"
+        [value]="option"
+        [checked]="theme.preference() === option"
+        (change)="theme.set(option)"
+      />
+      {{ 'theme.' + option | transloco }}
+    </label>
+  }
+</fieldset>

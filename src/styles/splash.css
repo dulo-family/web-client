@@ -1,0 +1,27 @@
+/* The splash in index.html. SplashService fades it out and removes it. */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  background: var(--color-bg);
+  transition: opacity var(--duration-slow) var(--ease-out);
+}
+
+.splash--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.wordmark {
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.splash .wordmark {
+  font-size: var(--text-display);
+}

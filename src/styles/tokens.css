@@ -1,0 +1,70 @@
+/*
+ * Design tokens. Colors use light-dark(), so they follow color-scheme:
+ * no data-theme attribute on <html> follows the system, data-theme="light" or "dark" forces one.
+ * The palette is a first draft; the detailed visual design comes later.
+ */
+:root {
+  color-scheme: light dark;
+
+  /* Colors */
+  --color-bg: light-dark(#fbfaf7, #131715);
+  --color-surface: light-dark(#ffffff, #1c211e);
+  --color-surface-raised: light-dark(#f2f1ec, #252b28);
+  --color-text: light-dark(#1d2320, #e7ebe8);
+  --color-text-muted: light-dark(#59625d, #a2aca6);
+  --color-border: light-dark(#d6d9d3, #353c38);
+  --color-accent: light-dark(#2e6a4e, #7cc4a0);
+  --color-accent-hover: light-dark(#245640, #95d3b3);
+  --color-on-accent: light-dark(#ffffff, #0e1a14);
+  --color-danger: light-dark(#b3261e, #f2b8b5);
+  --color-focus: light-dark(#2e6a4e, #7cc4a0);
+
+  /* Type */
+  --font-sans:
+    system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', 'Roboto Mono', Menlo, monospace;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-display: clamp(2.5rem, 6vw + 1rem, 4.5rem);
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+
+  /* Spacing (4 px steps) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  /* Shape */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-full: 999px;
+  --border-width: 1px;
+  --focus-ring: 2px solid var(--color-focus);
+  --focus-offset: 2px;
+
+  /* Motion */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}

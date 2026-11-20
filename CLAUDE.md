@@ -5,7 +5,8 @@ Guidance for Claude Code in this repository.
 ## Project
 
 The web client of Dulo, a self-hosted family tree app. The server is a separate repository,
-usually checked out at `../server` (start Claude Code with `claude --add-dir ../server`).
+usually checked out at `../server`. Start Claude Code from the parent directory that holds both
+checkouts, or from here with `claude --add-dir ../server`.
 
 - API contract: `../server/api/openapi.json`.
 - Auth flow (Dulo is its own OAuth2 server, the SPA is the public PKCE client `dulo-web`):

@@ -83,6 +83,12 @@ public/i18n/ translations (en, bg)
   `authInterceptor` adds the token to `${API_BASE_URL}/api/` calls only, refreshes before expiry
   and once after a 401. Refresh tokens live in localStorage (`dulo.auth.refreshToken`), access
   and ID tokens in memory. Tests replace full-page navigation through `BROWSER_LOCATION`.
+- Routing (`app.routes.ts`): the app's own pages are children of the `''` route, whose
+  `canActivateChild` leads to the setup while it's pending (`setupCompletedGuard`) and to
+  `/sign-in?returnTo=…` without a session (`signedInGuard`); add new pages there. `/setup` has
+  `setupPendingGuard`, which leads home once the setup is done; `/sign-in` and `/auth/callback`
+  are always open. `SetupStatus` (`src/app/core/setup`) asks `GET /setup/status` once per page
+  load. The review step marks it completed, and the `setup-required` interceptor marks it pending.
 - Setup wizard (`src/app/features/setup`): one route per step (`/setup/<step>`, `SETUP_STEPS`
   in `setup.store.ts`), each wrapped in `<dulo-setup-step>` (form, Enter continues, focus on the
   `[data-autofocus]` field, Back/Continue, errors sent back by later steps). `SetupStore` holds

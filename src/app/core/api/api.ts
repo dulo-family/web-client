@@ -13,6 +13,7 @@ export type Schemas = components['schemas'];
 export type IdentityProvider = Schemas['IdentityProviderResponse'];
 export type Me = Schemas['MeResponse'];
 export type SetupStatus = Schemas['SetupStatusResponse'];
+export type Tree = Schemas['TreeResponse'];
 
 /** `${base}/api/v1${path}`. */
 export function apiUrl(base: string, path: `/${string}`): string {

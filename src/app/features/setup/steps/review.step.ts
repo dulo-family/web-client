@@ -12,6 +12,7 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { API_BASE_URL, Me, apiUrl } from '../../../core/api/api';
 import { problemCode, toProblem } from '../../../core/api/problem';
 import { ProblemMessages } from '../../../core/api/problem-messages';
+import { SetupStatus } from '../../../core/setup/setup-status';
 import { Button } from '../../../ui/button/button';
 import { Segment, mergeConfiguration } from '../merged-configuration';
 import { SetupApi } from '../setup-api';
@@ -37,6 +38,7 @@ export class ReviewStep {
   private readonly navigator = inject(SetupNavigator);
   private readonly problems = inject(ProblemMessages);
   private readonly transloco = inject(TranslocoService);
+  private readonly status = inject(SetupStatus);
   protected readonly store = inject(SetupStore);
 
   protected readonly me = httpResource<Me>(() => apiUrl(this.base, '/me'));
@@ -107,6 +109,7 @@ export class ReviewStep {
         enabledFeatures: this.store.enabledFeatures(),
       });
       this.store.finish(tree.name);
+      this.status.markCompleted();
       await this.router.navigateByUrl('/setup/done');
     } catch (error) {
       await this.handle(error);
@@ -129,6 +132,7 @@ export class ReviewStep {
         return;
       case 'setup-completed':
         this.store.clear();
+        this.status.markCompleted();
         this.alreadyDone.set(true);
         this.error.set(message);
         return;

@@ -7,6 +7,7 @@ import { settle } from '../../../../testing/http';
 import { provideI18nTesting } from '../../../../testing/i18n';
 import { API_BASE_URL } from '../../../core/api/api';
 import { AuthService } from '../../../core/auth/auth.service';
+import { SetupStatus } from '../../../core/setup/setup-status';
 import { DEFAULTS } from '../../../../testing/setup';
 import { SetupStore } from '../setup.store';
 import { ReviewStep } from './review.step';
@@ -77,6 +78,7 @@ describe('ReviewStep', () => {
     await settle();
 
     expect(store.finishedTreeName()).toBe('The Smiths');
+    expect(TestBed.inject(SetupStatus).pending()).toBe(false);
     expect(router.navigateByUrl).toHaveBeenCalledWith('/setup/done');
   });
 
@@ -126,6 +128,7 @@ describe('ReviewStep', () => {
     expect(element.querySelector('[role="alert"]')?.textContent).toContain('already complete');
     expect(element.querySelector('a[href="/"]')).not.toBeNull();
     expect(store.token()).toBe('');
+    expect(TestBed.inject(SetupStatus).pending()).toBe(false);
   });
 
   it('shows the merged configuration only on request, with each value’s sources', async () => {

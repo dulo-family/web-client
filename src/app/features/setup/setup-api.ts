@@ -1,11 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { API_BASE_URL, Schemas, apiUrl } from '../../core/api/api';
+import { API_BASE_URL, Schemas, Tree, apiUrl } from '../../core/api/api';
 
 export type SetupDefaults = Schemas['SetupDefaultsResponse'];
 export type SetupRequest = Schemas['SetupRequest'];
-export type Tree = Schemas['TreeResponse'];
 
 const SETUP_TOKEN_HEADER = 'X-Dulo-Setup-Token';
 

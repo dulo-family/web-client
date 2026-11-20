@@ -2,10 +2,36 @@
   display: grid;
   justify-items: center;
   gap: var(--space-5);
-  padding: var(--space-8) var(--space-4);
+  max-width: 36rem;
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-4);
   text-align: center;
+}
+
+.brand {
+  font-size: var(--text-2xl);
 }
 
 h1 {
   font-size: var(--text-display);
+  overflow-wrap: anywhere;
+}
+
+.description {
+  white-space: pre-line;
+}
+
+.account {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.muted {
+  color: var(--color-text-muted);
+}
+
+.error {
+  color: var(--color-danger);
 }

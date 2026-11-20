@@ -12,8 +12,9 @@
     "signingIn": "Signing you in…"
   },
   "home": {
+    "loading": "Loading the family tree…",
+    "retry": "Try again",
     "signedInAs": "Signed in as {name}",
-    "signIn": "Sign in",
     "signOut": "Sign out"
   },
   "signIn": {

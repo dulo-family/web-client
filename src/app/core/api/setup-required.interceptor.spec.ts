@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { SetupStatus } from '../setup/setup-status';
 import { setupRequiredInterceptor } from './setup-required.interceptor';
 
 describe('setupRequiredInterceptor', () => {
@@ -32,10 +33,22 @@ describe('setupRequiredInterceptor', () => {
       respond(503, { type: 'urn:dulo:problem:setup-required', status: 503 }),
     ).rejects.toMatchObject({ status: 503 });
     expect(navigate).toHaveBeenCalledWith('/setup');
+    expect(TestBed.inject(SetupStatus).pending()).toBe(true);
+  });
+
+  it('stays on the setup when it is already open', async () => {
+    vi.spyOn(TestBed.inject(Router), 'url', 'get').mockReturnValue('/setup/review');
+
+    await expect(
+      respond(503, { type: 'urn:dulo:problem:setup-required', status: 503 }),
+    ).rejects.toMatchObject({ status: 503 });
+    expect(navigate).not.toHaveBeenCalled();
+    expect(TestBed.inject(SetupStatus).pending()).toBe(true);
   });
 
   it('ignores other errors', async () => {
     await expect(respond(503, 'Service Unavailable')).rejects.toMatchObject({ status: 503 });
     expect(navigate).not.toHaveBeenCalled();
+    expect(TestBed.inject(SetupStatus).pending()).toBeNull();
   });
 });

@@ -1,4 +1,4 @@
-import MessageFormat from '@messageformat/core';
+import { IntlMessageFormat } from 'intl-messageformat';
 import bg from '../../../../public/i18n/bg.json';
 import en from '../../../../public/i18n/en.json';
 import { LANGUAGE_IDS, LanguageId } from './languages';
@@ -33,11 +33,15 @@ describe('translations', () => {
       });
 
       it('has only non-empty string messages that parse as ICU MessageFormat', () => {
-        const messageFormat = new MessageFormat(language);
         for (const [key, message] of messages) {
           expect(typeof message, key).toBe('string');
           expect((message as string).trim(), key).not.toBe('');
-          expect(() => messageFormat.compile(message as string), key).not.toThrow();
+          // Parses the message as IcuTranspiler does.
+          expect(
+            () =>
+              new IntlMessageFormat(message as string, language, undefined, { ignoreTag: true }),
+            key,
+          ).not.toThrow();
         }
       });
     });

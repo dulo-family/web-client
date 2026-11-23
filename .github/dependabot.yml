@@ -19,3 +19,15 @@ updates:
     directory: /
     schedule:
       interval: weekly
+
+  # The image's base images. Node.js follows .nvmrc and Java the server, so their majors move on
+  # purpose.
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+    ignore:
+      - dependency-name: node
+        update-types: ['version-update:semver-major']
+      - dependency-name: eclipse-temurin
+        update-types: ['version-update:semver-major']

@@ -1,0 +1,215 @@
+name: Release
+
+# Runs only by hand, so several merged changes can go out in one release. It builds the Docker
+# image (server + web client) for each platform on a native runner, joins them under one
+# multi-platform tag, attests it and tags the release. The version comes from the latest v* tag,
+# so no release commit has to land on main.
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version type to increment'
+        required: true
+        default: 'minor'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+# Releases must never run in parallel or be canceled halfway.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions: {}
+
+env:
+  IMAGE: ghcr.io/dulo-family/dulo
+
+jobs:
+  version:
+    name: Version
+    # Releases are cut from main only.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-26.04
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      minor: ${{ steps.version.outputs.minor }}
+      server: ${{ steps.version.outputs.server }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Determine versions
+        id: version
+        env:
+          VERSION_TYPE: ${{ inputs.version_type }}
+        run: |
+          set -euo pipefail
+          last=$(git tag --list 'v*' --sort=-v:refname | head -n 1)
+          last=${last:-v0.0.0}
+          IFS=. read -r major minor patch <<< "${last#v}"
+          case "$VERSION_TYPE" in
+            major) version="$((major + 1)).0.0" ;;
+            minor) version="${major}.$((minor + 1)).0" ;;
+            patch) version="${major}.${minor}.$((patch + 1))" ;;
+            *) echo "Unknown version type: $VERSION_TYPE"; exit 1 ;;
+          esac
+          server=$(sed -n 's/^ARG SERVER_VERSION=//p' Dockerfile)
+          echo "Release $version (after $last) with server $server"
+          {
+            echo "version=$version"
+            echo "minor=${version%.*}"
+            echo "server=$server"
+          } >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Build (${{ matrix.arch }})
+    needs: version
+    strategy:
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-26.04
+          - arch: arm64
+            runner: ubuntu-26.04-arm
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Fetch and verify the server JAR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/fetch-server.sh
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      # Pushed by digest only, without a tag: the publish job tags the joined image. The path
+      # context, not the Git one: the fetched JAR isn't in Git.
+      - name: Build and push image
+        id: build
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: linux/${{ matrix.arch }}
+          build-args: |
+            VERSION=${{ needs.version.outputs.version }}
+          outputs: type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=release-${{ matrix.arch }}
+          cache-to: type=gha,scope=release-${{ matrix.arch }},mode=max
+
+      - name: Export digest
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/digests"
+          touch "$RUNNER_TEMP/digests/${DIGEST#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v7
+        with:
+          name: digest-${{ matrix.arch }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    name: Publish
+    needs: [version, build]
+    runs-on: ubuntu-26.04
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+      attestations: write
+
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@v8
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digest-*
+          merge-multiple: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Tag the multi-platform image
+        id: tag
+        working-directory: ${{ runner.temp }}/digests
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
+          MINOR: ${{ needs.version.outputs.minor }}
+        run: |
+          set -euo pipefail
+          # One file per platform, named after its image's digest.
+          images=()
+          for digest in *; do
+            images+=("$IMAGE@sha256:$digest")
+          done
+          docker buildx imagetools create \
+            --tag "$IMAGE:$VERSION" --tag "$IMAGE:$MINOR" --tag "$IMAGE:latest" \
+            "${images[@]}"
+          digest=$(docker buildx imagetools inspect "$IMAGE:$VERSION" --format '{{json .Manifest}}' | jq -r .digest)
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+
+      # Lets anyone verify that this workflow built the image:
+      # gh attestation verify oci://ghcr.io/dulo-family/dulo:<version> --repo dulo-family/web-client
+      - name: Attest image
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-name: ${{ env.IMAGE }}
+          subject-digest: ${{ steps.tag.outputs.digest }}
+          push-to-registry: true
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ needs.version.outputs.version }}
+          SERVER: ${{ needs.version.outputs.server }}
+        run: |
+          gh release create "v$VERSION" \
+            --target "$GITHUB_SHA" \
+            --title "Dulo $VERSION" \
+            --notes "Image: \`$IMAGE:$VERSION\`, with [Dulo Server $SERVER](https://github.com/dulo-family/dulo-server/releases/tag/v$SERVER)." \
+            --generate-notes
+
+      - name: Print release info
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
+          SERVER: ${{ needs.version.outputs.server }}
+          DIGEST: ${{ steps.tag.outputs.digest }}
+        run: |
+          {
+            echo "## Release v$VERSION"
+            echo ""
+            echo "- **Image**: \`$IMAGE:$VERSION\` (\`$DIGEST\`), linux/amd64 and linux/arm64"
+            echo "- **Server**: $SERVER"
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -27,6 +27,38 @@ checkouts, or from here with `claude --add-dir ../server`.
   lets it use the project's TypeScript.
 
 CI (`.github/workflows/ci.yml`) runs lint, format check, tests and build on pull requests only.
+`image.yml` builds and smoke-tests the Docker image on pull requests that touch it, as a matrix
+with one native runner per platform (`ubuntu-26.04` and `ubuntu-26.04-arm`).
+
+## Docker image
+
+This repository builds the one Dulo image: the server JAR plus the web client, served by nginx.
+
+- `Dockerfile`: client build (native platform), server stage (extracts the JAR, jdeps + jlink a
+  trimmed Java runtime), Alpine runtime with nginx and tini, user `dulo`. Base image tags are
+  literal so Dependabot updates them.
+- The server version is `ARG SERVER_VERSION` in the `Dockerfile`. `scripts/fetch-server.sh`
+  downloads that JAR into `dist/server/` and runs `gh attestation verify` against the server's
+  release workflow; the build copies it from there. Bump the ARG for a new server release.
+- `docker/entrypoint.sh` starts the server on `127.0.0.1:8081` (command-line arguments, so no
+  setting can move it) and nginx on `:8080`, and exits when either stops.
+- `docker/nginx.conf` passes `/api/`, `/oauth2/`, `/login/`, `/connect/`, `/.well-known/`,
+  `/userinfo` and `/actuator/health` to the server; everything else is the client, with
+  `index.html` for app routes. A new server path must be added there. It sends
+  `X-Forwarded-Proto` and `X-Forwarded-Port` (from an outer proxy, else the `Host` header), and the
+  image sets `SERVER_FORWARD_HEADERS_STRATEGY=native`: the server builds absolute redirects (back
+  to `/oauth2/authorize` after the identity provider) from them, and Tomcat assumes port 80 or 443
+  without a port header.
+- `docker/security-headers.mjs` writes the client's CSP at build time, with the sha256 of every
+  inline script in `index.html`, so inline scripts need no other change.
+- The image's outside (port 8080, `/config/dulo.yaml`, `/data`, `DULO_*` variables) is the
+  contract with users; keep it stable.
+- `release.yml` (by hand: major|minor|patch) takes the version from the latest `v*` tag. A matrix
+  builds each platform on a native runner and pushes it by digest; the publish job joins them as
+  `ghcr.io/dulo-family/dulo:{X.Y.Z, X.Y, latest}` (`docker buildx imagetools create`), attests
+  that digest and creates the GitHub release. `package.json` keeps `0.0.0`.
+- Test locally: `scripts/fetch-server.sh && docker build -t dulo:dev . &&
+scripts/smoke-test-image.sh dulo:dev`.
 
 npm 12 blocks dependency install scripts. `allowScripts` in `package.json` denies the ones we
 don't need (the packages ship prebuilt binaries). Review new entries with

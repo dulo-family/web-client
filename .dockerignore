@@ -1,0 +1,13 @@
+# Only what the image build needs. Everything else stays out of the build context.
+*
+!.nvmrc
+!angular.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!tsconfig.app.json
+!public/
+!src/
+!docker/
+!dist/server/
+!LICENSE

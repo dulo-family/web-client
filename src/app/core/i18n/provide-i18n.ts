@@ -1,6 +1,6 @@
 import { EnvironmentProviders, inject, isDevMode, provideAppInitializer } from '@angular/core';
 import { provideTransloco } from '@jsverse/transloco';
-import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat';
+import { provideIcuTranspiler } from './icu-transpiler';
 import { DEFAULT_LANGUAGE, LANGUAGE_IDS } from './languages';
 import { LocaleService } from './locale.service';
 import { TranslocoHttpLoader } from './transloco-loader';
@@ -19,7 +19,7 @@ export function provideI18n(): EnvironmentProviders[] {
       },
       loader: TranslocoHttpLoader,
     }),
-    provideTranslocoMessageformat(),
+    provideIcuTranspiler(),
     provideAppInitializer(() => inject(LocaleService).init()),
   ];
 }

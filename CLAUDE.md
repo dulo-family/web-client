@@ -68,6 +68,9 @@ public/i18n/ translations (en, bg)
   `{name}` placeholders, `plural` and `select`, never Transloco's `{{ }}` syntax, so the files stay
   usable on any translation platform. Add each key to every language;
   `src/app/core/i18n/translations.spec.ts` fails on missing keys or messages that don't parse.
+  `IcuTranspiler` formats them with `intl-messageformat`, which interprets messages: the image's
+  Content Security Policy has no `'unsafe-eval'`, so no code may compile strings with `eval` or
+  `new Function` (as `@messageformat/core` did).
 - Languages are listed in `src/app/core/i18n/languages.ts`. `LocaleService` picks the start
   language (stored `dulo.lang`, else the browser's languages, else English), loads it before the
   first render and keeps `<html lang>` in sync. Component tests get Transloco with the real files

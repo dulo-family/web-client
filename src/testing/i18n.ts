@@ -1,8 +1,8 @@
 import { EnvironmentProviders, importProvidersFrom } from '@angular/core';
 import { TranslocoTestingModule } from '@jsverse/transloco';
-import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat';
 import bg from '../../public/i18n/bg.json';
 import en from '../../public/i18n/en.json';
+import { provideIcuTranspiler } from '../app/core/i18n/icu-transpiler';
 import { DEFAULT_LANGUAGE, LANGUAGE_IDS } from '../app/core/i18n/languages';
 
 /** Transloco with the real translation files, preloaded, starting in English. */
@@ -20,6 +20,6 @@ export function provideI18nTesting(): EnvironmentProviders[] {
         preloadLangs: true,
       }),
     ),
-    provideTranslocoMessageformat(),
+    provideIcuTranspiler(),
   ];
 }

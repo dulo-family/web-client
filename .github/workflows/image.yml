@@ -1,0 +1,59 @@
+name: Image
+
+# Builds and smoke-tests the Docker image on pull requests that change it, for each platform on a
+# native runner. Releases build both platforms and publish them (release.yml).
+on:
+  pull_request:
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - docker/**
+      - scripts/fetch-server.sh
+      - scripts/smoke-test-image.sh
+      - .github/workflows/image.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  image:
+    name: Image (${{ matrix.arch }})
+    strategy:
+      # A failure on one platform shouldn't hide the result of the other.
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-26.04
+          - arch: arm64
+            runner: ubuntu-26.04-arm
+    runs-on: ${{ matrix.runner }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Fetch and verify the server JAR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/fetch-server.sh
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      # The path context, not the Git one: the fetched JAR isn't in Git.
+      - name: Build image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          load: true
+          tags: dulo:test
+          cache-from: type=gha,scope=image-${{ matrix.arch }}
+          cache-to: type=gha,scope=image-${{ matrix.arch }},mode=max
+
+      - name: Smoke test
+        run: scripts/smoke-test-image.sh dulo:test

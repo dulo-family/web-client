@@ -6,17 +6,17 @@ import {
   computed,
   inject,
   input,
-  output,
   viewChild,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
+import { Action } from '../../ui/action/action';
 import { Button } from '../../ui/button/button';
 import { SetupStepId, SetupStore } from './setup.store';
 
 /**
  * The frame of every setup step: heading, content, Back and Continue. The content sits in a form,
- * so Enter continues. When the step opens, focus moves to its `[data-autofocus]` field, else to
+ * so Enter continues: it runs the step's `action`, which disables Continue until it has finished. When the step opens, focus moves to its `[data-autofocus]` field, else to
  * the heading.
  */
 @Component({
@@ -35,8 +35,7 @@ export class SetupStep {
   readonly title = input.required<string>();
   readonly continueLabel = input<string | null>(null);
   readonly showContinue = input(true);
-  readonly busy = input(false);
-  readonly next = output<void>();
+  readonly action = input.required<Action>();
 
   protected readonly back = computed(() => this.store.previous(this.step()));
   protected readonly error = computed(() => {
@@ -53,8 +52,6 @@ export class SetupStep {
 
   protected submit(event: Event): void {
     event.preventDefault();
-    if (!this.busy()) {
-      this.next.emit();
-    }
+    void this.action()();
   }
 }

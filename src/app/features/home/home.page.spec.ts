@@ -58,8 +58,13 @@ describe('HomePage', () => {
     expect(page.querySelector('h1')?.textContent).toContain('The Smiths');
     expect(page.textContent).toContain('Since 1820');
     expect(page.textContent).toContain('Signed in as Ada');
-    page.querySelector('button')!.click();
-    expect(signOut).toHaveBeenCalled();
+    const button = page.querySelector('button')!;
+    button.click();
+    button.click();
+    await element();
+
+    expect(signOut).toHaveBeenCalledTimes(1);
+    expect(button.disabled).toBe(true);
   });
 
   it('says why the tree can’t be shown and tries again', async () => {

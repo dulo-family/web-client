@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
+import { action } from '../../../ui/action/action';
 import { SetupStep } from '../setup-step';
 import { SetupNavigator } from '../setup-navigator';
 
@@ -11,7 +12,7 @@ import { SetupNavigator } from '../setup-navigator';
       step="welcome"
       [title]="'setup.welcome.title' | transloco"
       [continueLabel]="'setup.welcome.start' | transloco"
-      (next)="navigator.next('welcome')"
+      [action]="next"
     >
       <p class="lead">{{ 'setup.welcome.intro' | transloco }}</p>
       <p>{{ 'setup.welcome.token' | transloco }}</p>
@@ -22,5 +23,7 @@ import { SetupNavigator } from '../setup-navigator';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WelcomeStep {
-  protected readonly navigator = inject(SetupNavigator);
+  private readonly navigator = inject(SetupNavigator);
+
+  protected readonly next = action(() => this.navigator.next('welcome'));
 }

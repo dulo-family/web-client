@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { RoleNamePipe } from '../role-name.pipe';
+import { action } from '../../../ui/action/action';
 import { SetupStep } from '../setup-step';
 import { SetupNavigator } from '../setup-navigator';
 import { SetupStore } from '../setup.store';
@@ -14,8 +15,10 @@ import { SetupStore } from '../setup.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccessStep {
-  protected readonly navigator = inject(SetupNavigator);
+  private readonly navigator = inject(SetupNavigator);
   private readonly store = inject(SetupStore);
+
+  protected readonly next = action(() => this.navigator.next('access'));
 
   protected readonly defaults = computed(() => this.store.defaults());
   protected readonly roles = computed(() => this.defaults()?.roles ?? []);

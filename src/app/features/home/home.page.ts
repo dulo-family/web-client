@@ -5,6 +5,7 @@ import { API_BASE_URL, Me, Tree, apiUrl } from '../../core/api/api';
 import { ProblemMessages } from '../../core/api/problem-messages';
 import { AuthService } from '../../core/auth/auth.service';
 import { LocaleService } from '../../core/i18n/locale.service';
+import { action } from '../../ui/action/action';
 import { Button } from '../../ui/button/button';
 import { Wordmark } from '../../ui/wordmark/wordmark';
 
@@ -20,7 +21,7 @@ export class HomePage {
   private readonly base = inject(API_BASE_URL);
   private readonly problems = inject(ProblemMessages);
   private readonly locale = inject(LocaleService);
-  protected readonly auth = inject(AuthService);
+  private readonly auth = inject(AuthService);
 
   protected readonly tree = httpResource<Tree>(() => apiUrl(this.base, '/tree'));
   protected readonly me = httpResource<Me>(() => apiUrl(this.base, '/me'));
@@ -35,6 +36,8 @@ export class HomePage {
     const me = this.me.hasValue() ? this.me.value() : null;
     return me ? (me.displayName ?? me.email ?? me.id) : null;
   });
+
+  protected readonly signOut = action(() => this.auth.signOut(), { leavesPage: true });
 
   protected reload(): void {
     this.tree.reload();

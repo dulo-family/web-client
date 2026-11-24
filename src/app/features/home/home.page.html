@@ -19,7 +19,13 @@
     @if (name(); as name) {
       <p class="muted">{{ 'home.signedInAs' | transloco: { name } }}</p>
     }
-    <button duloButton variant="secondary" type="button" (click)="auth.signOut()">
+    <button
+      duloButton
+      variant="secondary"
+      type="button"
+      [disabled]="signOut.busy()"
+      (click)="signOut()"
+    >
       {{ 'home.signOut' | transloco }}
     </button>
   </footer>

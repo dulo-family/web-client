@@ -16,6 +16,7 @@ import { SetupStatus } from '../../../core/setup/setup-status';
 import { Button } from '../../../ui/button/button';
 import { Segment, mergeConfiguration } from '../merged-configuration';
 import { SetupApi } from '../setup-api';
+import { action } from '../../../ui/action/action';
 import { SetupStep } from '../setup-step';
 import { SetupNavigator } from '../setup-navigator';
 import { SetupStore } from '../setup.store';
@@ -95,12 +96,10 @@ export class ReviewStep {
   protected reloadResult(): void {
     this.server.reload();
   }
-  protected readonly busy = signal(false);
   protected readonly error = signal<string | null>(null);
   protected readonly alreadyDone = signal(false);
 
-  protected async finish(): Promise<void> {
-    this.busy.set(true);
+  protected readonly finish = action(async () => {
     this.error.set(null);
     try {
       const tree = await this.api.complete(this.store.token(), {
@@ -113,10 +112,8 @@ export class ReviewStep {
       await this.router.navigateByUrl('/setup/done');
     } catch (error) {
       await this.handle(error);
-    } finally {
-      this.busy.set(false);
     }
-  }
+  });
 
   private async handle(error: unknown): Promise<void> {
     const problem = toProblem(error);

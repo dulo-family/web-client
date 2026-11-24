@@ -1,10 +1,11 @@
 import { httpResource } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { API_BASE_URL, IdentityProvider, Me, apiUrl } from '../../../core/api/api';
 import { ProblemMessages } from '../../../core/api/problem-messages';
 import { AuthService } from '../../../core/auth/auth.service';
 import { Button } from '../../../ui/button/button';
+import { action } from '../../../ui/action/action';
 import { SetupStep } from '../setup-step';
 import { SetupNavigator } from '../setup-navigator';
 import { SetupStore } from '../setup.store';
@@ -41,18 +42,15 @@ export class SignInStep {
     const error = this.providers.error();
     return error ? this.problems.message(error) : null;
   });
-  protected readonly starting = signal(false);
 
-  protected async signIn(provider: IdentityProvider): Promise<void> {
-    this.starting.set(true);
-    await this.auth.signIn(provider.id, RETURN_TO);
-  }
-
-  protected async useAnotherAccount(): Promise<void> {
-    await this.auth.signOut(RETURN_TO);
-  }
-
-  protected async next(): Promise<void> {
+  protected readonly signIn = action(
+    (provider: IdentityProvider) => this.auth.signIn(provider.id, RETURN_TO),
+    { leavesPage: true },
+  );
+  protected readonly useAnotherAccount = action(() => this.auth.signOut(RETURN_TO), {
+    leavesPage: true,
+  });
+  protected readonly next = action(async () => {
     if (this.auth.signedIn()) {
       await this.navigator.next('sign-in');
     } else {
@@ -61,5 +59,5 @@ export class SignInStep {
         message: this.transloco.translate('setup.signIn.required'),
       });
     }
-  }
+  });
 }

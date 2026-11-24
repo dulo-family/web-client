@@ -20,7 +20,7 @@
           duloButton
           size="large"
           type="button"
-          [disabled]="starting() !== null"
+          [disabled]="signIn.busy()"
           (click)="signIn(provider)"
         >
           {{ 'signIn.with' | transloco: { provider: provider.displayName } }}

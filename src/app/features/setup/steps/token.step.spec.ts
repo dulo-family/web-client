@@ -71,6 +71,25 @@ describe('TokenStep', () => {
     expect(navigate).not.toHaveBeenCalled();
   });
 
+  it('checks the token once, however often it is submitted, until the server answers', async () => {
+    const element = await submit('wrong');
+    element.querySelector('form')!.dispatchEvent(new Event('submit'));
+    TestBed.tick();
+    const button = element.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    expect(button.disabled).toBe(true);
+
+    TestBed.inject(HttpTestingController)
+      .expectOne(DEFAULTS_URL)
+      .flush(
+        { type: 'urn:dulo:problem:invalid-setup-token', status: 403 },
+        { status: 403, statusText: 'Forbidden' },
+      );
+    await settle();
+    TestBed.tick();
+
+    expect(button.disabled).toBe(false);
+  });
+
   it('asks for a token before calling the server', async () => {
     const element = await submit('  ');
     TestBed.tick();

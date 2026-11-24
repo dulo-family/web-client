@@ -1,11 +1,12 @@
 import { httpResource } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { API_BASE_URL, IdentityProvider, apiUrl } from '../../core/api/api';
 import { ProblemMessages } from '../../core/api/problem-messages';
 import { AuthService } from '../../core/auth/auth.service';
 import { LocaleService } from '../../core/i18n/locale.service';
+import { action } from '../../ui/action/action';
 import { Button } from '../../ui/button/button';
 import { Wordmark } from '../../ui/wordmark/wordmark';
 
@@ -36,10 +37,8 @@ export class SignInPage {
     const error = this.providers.error();
     return error ? this.problems.message(error) : null;
   });
-  protected readonly starting = signal<string | null>(null);
-
-  protected async signIn(provider: IdentityProvider): Promise<void> {
-    this.starting.set(provider.id);
-    await this.auth.signIn(provider.id, this.returnTo);
-  }
+  protected readonly signIn = action(
+    (provider: IdentityProvider) => this.auth.signIn(provider.id, this.returnTo),
+    { leavesPage: true },
+  );
 }

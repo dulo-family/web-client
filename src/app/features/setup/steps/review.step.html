@@ -3,8 +3,7 @@
   [title]="'setup.review.title' | transloco"
   [continueLabel]="'setup.review.finish' | transloco"
   [showContinue]="!alreadyDone()"
-  [busy]="busy()"
-  (next)="finish()"
+  [action]="finish"
 >
   @if (error(); as error) {
     <p class="error-text" role="alert">{{ error }}</p>

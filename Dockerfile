@@ -6,7 +6,7 @@
 #   scripts/fetch-server.sh && docker build -t dulo .
 
 # The server release the image bundles; scripts/fetch-server.sh reads it from here.
-ARG SERVER_VERSION=0.4.0
+ARG SERVER_VERSION=0.5.0
 # The base images have literal tags, so Dependabot can update them. Node.js is the version in
 # .nvmrc, Java the server's.
 

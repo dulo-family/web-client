@@ -85,7 +85,7 @@
         "approval": "People who sign in wait until an administrator approves them."
       },
       "providers": "Roles from sign-in providers",
-      "mapping": "“{claim}” gets {roles}",
+      "mapping": "“{claim}” gets {role}",
       "defaultRole": "Everyone else gets {role}",
       "noRoles": "No roles from this provider; an administrator assigns them.",
       "roles": "Roles",

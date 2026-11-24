@@ -504,6 +504,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/v1/server': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get the server's version
+     * @description Returns the version of the running server, for clients that show what is running. Every active user may read it.
+     */
+    get: operations['getServer'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/v1/setup': {
     parameters: {
       query?: never;
@@ -533,7 +553,7 @@ export interface paths {
     };
     /**
      * Get the server's configuration
-     * @description The merged configuration with secrets masked and the source of each value, to check it before completing the setup.
+     * @description The merged configuration with secrets masked and every source of each value, to check it before completing the setup.
      */
     get: operations['configuration'];
     put?: never;
@@ -989,8 +1009,15 @@ export interface components {
        */
       version: number;
     };
+    ServerResponse: {
+      /**
+       * @description The server's version, e.g. `0.4.0`, or `unknown` when it was built without build information.
+       * @example 0.4.0
+       */
+      version: string;
+    };
     SetupConfigurationResponse: {
-      /** @description The merged configuration as YAML, with secrets masked and the source of each value as a comment. */
+      /** @description The merged configuration as YAML, with secrets masked. Each value's comment lists every source that sets it, lowest priority first and separated by ` → `: the last one wins. `default` comes first when Dulo has a default. */
       configuration: string;
     };
     SetupDefaultsResponse: {
@@ -1011,9 +1038,9 @@ export interface components {
       defaultRole?: string | null;
       displayName: string;
       id: string;
-      /** @description Claim value to the role keys it grants. */
+      /** @description Claim value to the role key it grants. */
       roleMappings: {
-        [key: string]: string[];
+        [key: string]: string;
       };
       /** @enum {string} */
       type: 'oidc' | 'google' | 'microsoft';
@@ -3327,6 +3354,53 @@ export interface operations {
       };
       /** @description The place exists and If-Match is missing. The problem type is `urn:dulo:problem:precondition-required`. */
       428: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/problem+json': components['schemas']['ProblemDetail'];
+        };
+      };
+    };
+  };
+  getServer: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description The server */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ServerResponse'];
+        };
+      };
+      /** @description No valid access token. The problem type is `urn:dulo:problem:unauthorized`. */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/problem+json': components['schemas']['ProblemDetail'];
+        };
+      };
+      /** @description The account is not active. The problem type is `urn:dulo:problem:account-pending` or `urn:dulo:problem:account-disabled`. */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/problem+json': components['schemas']['ProblemDetail'];
+        };
+      };
+      /** @description The initial setup isn't done yet. The problem type is `urn:dulo:problem:setup-required`. */
+      503: {
         headers: {
           [name: string]: unknown;
         };

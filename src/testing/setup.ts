@@ -12,7 +12,7 @@ export const DEFAULTS: SetupDefaults = {
       id: 'mock',
       displayName: 'Mock provider',
       type: 'oidc',
-      roleMappings: { 'dulo-admins': ['admin'] },
+      roleMappings: { 'dulo-admins': 'admin' },
       defaultRole: 'viewer',
     },
   ],

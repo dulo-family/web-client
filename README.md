@@ -92,9 +92,10 @@ scripts/smoke-test-image.sh dulo:dev
 ```
 
 Inside the image, nginx serves the web client on port 8080 and passes `/api/`, `/oauth2/`,
-`/login/`, `/connect/`, `/.well-known/`, `/userinfo` and `/actuator/health` to the server, which
-listens on `127.0.0.1:8081` only. Releases are started by hand with the `Release` workflow (major,
-minor or patch), which publishes the image for amd64 and arm64.
+`/login/`, `/connect/`, `/logout/connect/back-channel/`, `/.well-known/`, `/userinfo` and
+`/actuator/health` to the server, which listens on `127.0.0.1:8081` only. Releases are started by
+hand with the `Release` workflow (major, minor or patch), which publishes the image for amd64 and
+arm64.
 
 ### Scripts
 

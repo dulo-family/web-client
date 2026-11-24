@@ -173,6 +173,10 @@ Create the directory and `chown 10001:10001` it first: the image runs as user `1
 5. Under **OIDC Clients**, add a client named Dulo with the callback URL
    `https://dulo.XXXXXX.ts.net/login/oauth2/code/pocketid` (the last part is the provider's key in
    the Dulo configuration). Copy its client ID and secret into the `dulo` config above.
+   Turn on **PKCE**: Dulo signs in with PKCE at every identity provider, so Pocket ID can require
+   it. Leave **Public client** off, since Dulo has a client secret.
+   To sign users out of Dulo when they sign out of Pocket ID, also set the back-channel logout
+   URL to `https://dulo.XXXXXX.ts.net/logout/connect/back-channel/pocketid`.
 6. Under **User Groups**, create `dulo-admins` (and `dulo-editors`, if you want editors) and add
    yourself to `dulo-admins`. Allow the groups to use the Dulo client if you restrict it.
 

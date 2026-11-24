@@ -67,6 +67,9 @@ authorize+="&redirect_uri=$base/auth/callback&scope=openid&code_challenge_method
 authorize+="&code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSBAAAAA"
 check "the web client is registered without configuration" \
   grep -qi "^location: $base/sign-in" <<<"$(head_of "$authorize")"
+check "back-channel logouts reach the server" \
+  grep -q '"error":"invalid_request"' \
+  <<<"$(curl -sS -X POST "$base/logout/connect/back-channel/none")"
 
 started="$(date +%s)"
 docker stop -t 30 "$name" >/dev/null

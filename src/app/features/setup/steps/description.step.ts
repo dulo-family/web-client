@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { TextField } from '../../../ui/text-field/text-field';
+import { action } from '../../../ui/action/action';
 import { SetupStep } from '../setup-step';
 import { SetupNavigator } from '../setup-navigator';
 import { DESCRIPTION_MAX_LENGTH, SetupStore } from '../setup.store';
@@ -12,7 +13,7 @@ import { DESCRIPTION_MAX_LENGTH, SetupStore } from '../setup.store';
     <dulo-setup-step
       step="description"
       [title]="'setup.description.title' | transloco"
-      (next)="navigator.next('description')"
+      [action]="next"
     >
       <dulo-text-field
         [(value)]="description"
@@ -27,7 +28,9 @@ import { DESCRIPTION_MAX_LENGTH, SetupStore } from '../setup.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DescriptionStep {
-  protected readonly navigator = inject(SetupNavigator);
+  private readonly navigator = inject(SetupNavigator);
+
+  protected readonly next = action(() => this.navigator.next('description'));
   protected readonly description = inject(SetupStore).description;
   protected readonly maxLength = DESCRIPTION_MAX_LENGTH;
 }

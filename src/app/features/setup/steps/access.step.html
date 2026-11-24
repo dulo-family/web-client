@@ -1,8 +1,4 @@
-<dulo-setup-step
-  step="access"
-  [title]="'setup.access.title' | transloco"
-  (next)="navigator.next('access')"
->
+<dulo-setup-step step="access" [title]="'setup.access.title' | transloco" [action]="next">
   @if (defaults(); as defaults) {
     <section class="section">
       <h2>{{ 'setup.access.registration.title' | transloco }}</h2>

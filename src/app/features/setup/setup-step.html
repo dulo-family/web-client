@@ -16,7 +16,7 @@
       </a>
     }
     @if (showContinue()) {
-      <button duloButton size="large" type="submit" class="continue" [disabled]="busy()">
+      <button duloButton size="large" type="submit" class="continue" [disabled]="action().busy()">
         {{ continueLabel() ?? ('setup.continue' | transloco) }}
       </button>
     }

@@ -64,8 +64,9 @@ describe('ReviewStep', () => {
     return element;
   }
 
-  it('sends the setup with both tokens and shows the done page', async () => {
-    await finish();
+  it('sends the setup once, with both tokens, and shows the done page', async () => {
+    const element = await finish();
+    element.querySelector('form')!.dispatchEvent(new Event('submit'));
 
     const request = http.expectOne(`${API}/setup`);
     expect(request.request.headers.get('X-Dulo-Setup-Token')).toBe('secret');

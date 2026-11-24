@@ -134,6 +134,11 @@ public/i18n/ translations (en, bg)
   Each value's comment is read as a source chain (`default → file x → environment variable Y`,
   `→` or `->`); all but the last source render struck through, and values the wizard sets end
   in `this setup`.
+- Buttons and forms that do something (submit, sign in or out) run it through `action()`
+  (`src/app/ui/action/action.ts`) and disable the button with its `busy()`: a second click or
+  Enter is ignored until it has finished. `leavesPage: true` keeps it busy after a redirect, until
+  the browser shows the page again from its back/forward cache. Setup steps pass theirs as
+  `[action]` to `<dulo-setup-step>`.
 - Grid layouts that hold long unbreakable content (YAML, ids) use `minmax(0, 1fr)` columns, or
   the content widens the page.
 - American English in code and in `en.json`.

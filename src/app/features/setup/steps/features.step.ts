@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Toggle } from '../../../ui/toggle/toggle';
+import { action } from '../../../ui/action/action';
 import { SetupStep } from '../setup-step';
 import { SetupNavigator } from '../setup-navigator';
 import { SetupStore } from '../setup.store';
@@ -10,11 +11,7 @@ import { SetupStore } from '../setup.store';
   selector: 'dulo-features-step',
   imports: [SetupStep, Toggle, TranslocoPipe],
   template: `
-    <dulo-setup-step
-      step="features"
-      [title]="'setup.features.title' | transloco"
-      (next)="navigator.next('features')"
-    >
+    <dulo-setup-step step="features" [title]="'setup.features.title' | transloco" [action]="next">
       <p class="lead">{{ 'setup.features.intro' | transloco }}</p>
       <ul class="list">
         @for (feature of features(); track feature.key; let first = $first) {
@@ -39,7 +36,9 @@ import { SetupStore } from '../setup.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FeaturesStep {
-  protected readonly navigator = inject(SetupNavigator);
+  private readonly navigator = inject(SetupNavigator);
+
   protected readonly store = inject(SetupStore);
+  protected readonly next = action(() => this.navigator.next('features'));
   protected readonly features = computed(() => this.store.defaults()?.features ?? []);
 }

@@ -2,7 +2,7 @@
   step="sign-in"
   [title]="'setup.signIn.title' | transloco"
   [showContinue]="auth.signedIn()"
-  (next)="next()"
+  [action]="next"
 >
   <p class="lead">{{ 'setup.signIn.intro' | transloco }}</p>
 
@@ -11,7 +11,13 @@
       @if (name(); as name) {
         <p>{{ 'setup.signIn.signedInAs' | transloco: { name } }}</p>
       }
-      <button duloButton variant="secondary" type="button" (click)="useAnotherAccount()">
+      <button
+        duloButton
+        variant="secondary"
+        type="button"
+        [disabled]="useAnotherAccount.busy()"
+        (click)="useAnotherAccount()"
+      >
         {{ 'setup.signIn.another' | transloco }}
       </button>
     </div>
@@ -30,7 +36,7 @@
           size="large"
           type="button"
           [attr.data-autofocus]="first ? '' : null"
-          [disabled]="starting()"
+          [disabled]="signIn.busy()"
           (click)="signIn(provider)"
         >
           {{ 'signIn.with' | transloco: { provider: provider.displayName } }}

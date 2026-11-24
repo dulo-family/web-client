@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslocoPipe, translateSignal } from '@jsverse/transloco';
 import { TextField } from '../../../ui/text-field/text-field';
+import { action } from '../../../ui/action/action';
 import { SetupStep } from '../setup-step';
 import { SetupNavigator } from '../setup-navigator';
 import { NAME_MAX_LENGTH, SetupStore } from '../setup.store';
@@ -9,7 +10,7 @@ import { NAME_MAX_LENGTH, SetupStore } from '../setup.store';
   selector: 'dulo-name-step',
   imports: [SetupStep, TextField, TranslocoPipe],
   template: `
-    <dulo-setup-step step="name" [title]="'setup.name.title' | transloco" (next)="next()">
+    <dulo-setup-step step="name" [title]="'setup.name.title' | transloco" [action]="next">
       <dulo-text-field
         [(value)]="name"
         [label]="'setup.name.label' | transloco"
@@ -34,10 +35,10 @@ export class NameStep {
     this.attempted() && !this.store.validity().name ? this.required() : null,
   );
 
-  protected async next(): Promise<void> {
+  protected readonly next = action(async () => {
     this.attempted.set(true);
     if (this.store.validity().name) {
       await this.navigator.next('name');
     }
-  }
+  });
 }

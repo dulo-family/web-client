@@ -92,7 +92,7 @@ services:
       - source: tailscale
         target: /config/ts-serve.json
     volumes:
-      - ./ts/dulo/state:/var/lib/tailscale
+      - tailscale_dulo_state:/var/lib/tailscale
     devices:
       - /dev/net/tun:/dev/net/tun
     cap_add:
@@ -127,7 +127,7 @@ services:
     container_name: tailscale_pocket_id
     hostname: pocketid
     volumes:
-      - ./ts/pocketid/state:/var/lib/tailscale
+      - tailscale_pocket_id_state:/var/lib/tailscale
 
   pocket_id:
     image: ghcr.io/pocket-id/pocket-id:v2.19.1
@@ -140,7 +140,7 @@ services:
       PUID: 1000
       PGID: 1000
     volumes:
-      - ./pocket-id:/app/data
+      - pocket_id_data:/app/data
     depends_on:
       tailscale_pocket_id:
         condition: service_healthy
@@ -154,10 +154,13 @@ services:
 
 volumes:
   dulo_data:
+  pocket_id_data:
+  tailscale_dulo_state:
+  tailscale_pocket_id_state:
 ```
 
-Dulo's data lives in the `dulo_data` volume. The image runs as user `10001`, so to use a folder
-instead, create it and `chown 10001:10001` it first.
+To use a custom directory instead of the named volume for Dulo, map it in place of the volume.
+Create the directory and `chown 10001:10001` it first: the image runs as user `10001`.
 
 ## Set up Pocket ID
 

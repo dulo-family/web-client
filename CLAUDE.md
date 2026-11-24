@@ -42,7 +42,8 @@ This repository builds the one Dulo image: the server JAR plus the web client, s
   release workflow; the build copies it from there. Bump the ARG for a new server release.
 - `docker/entrypoint.sh` starts the server on `127.0.0.1:8081` (command-line arguments, so no
   setting can move it) and nginx on `:8080`, and exits when either stops.
-- `docker/nginx.conf` passes `/api/`, `/oauth2/`, `/login/`, `/connect/`, `/.well-known/`,
+- `docker/nginx.conf` passes `/api/`, `/oauth2/`, `/login/`, `/connect/`,
+  `/logout/connect/back-channel/` (identity providers' back-channel logouts), `/.well-known/`,
   `/userinfo` and `/actuator/health` to the server; everything else is the client, with
   `index.html` for app routes. A new server path must be added there. It sends
   `X-Forwarded-Proto` and `X-Forwarded-Port` (from an outer proxy, else the `Host` header), and the

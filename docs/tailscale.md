@@ -68,8 +68,8 @@ configs:
               scopes: [openid, profile, email, groups]
               # Members of these Pocket ID groups get these Dulo roles at once.
               role-mappings:
-                dulo-admins: [admin]
-                dulo-editors: [editor]
+                dulo_admins: admin
+                dulo_editors: editor
               # Everyone else may look, once an administrator approves them.
               default-role: viewer
         registration:
@@ -107,7 +107,7 @@ services:
     restart: always
 
   dulo:
-    image: ghcr.io/dulo-family/dulo:0.1
+    image: ghcr.io/dulo-family/dulo:0.2
     container_name: dulo
     network_mode: service:tailscale_dulo
     configs:
@@ -191,5 +191,5 @@ right away; everyone else waits until you approve them in Dulo.
 
 ## Updating
 
-Change the image tags, then `docker compose pull && docker compose up -d`. The `0.1` tag of Dulo
-follows the latest `0.1.x` release; pin an exact version such as `0.1.0` to update only on purpose.
+Change the image tags, then `docker compose pull && docker compose up -d`. The `0.2` tag of Dulo
+follows the latest `0.2.x` release; pin an exact version such as `0.2.0` to update only on purpose.

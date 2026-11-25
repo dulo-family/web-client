@@ -177,8 +177,8 @@ Create the directory and `chown 10001:10001` it first: the image runs as user `1
    it. Leave **Public client** off, since Dulo has a client secret.
    To sign users out of Dulo when they sign out of Pocket ID, also set the back-channel logout
    URL to `https://dulo.XXXXXX.ts.net/logout/connect/back-channel/pocketid`.
-6. Under **User Groups**, create `dulo-admins` (and `dulo-editors`, if you want editors) and add
-   yourself to `dulo-admins`. Allow the groups to use the Dulo client if you restrict it.
+6. Under **User Groups**, create `dulo_admins` (and `dulo_editors`, if you want editors) and add
+   yourself to `dulo_admins`. Allow the groups to use the Dulo client if you restrict it.
 
 ## Start Dulo
 
@@ -186,7 +186,8 @@ Create the directory and `chown 10001:10001` it first: the image runs as user `1
 2. Create its HTTPS certificate, as for Pocket ID:
    `docker compose exec tailscale_dulo tailscale cert dulo.XXXXXX.ts.net`
 3. Start Dulo: `docker compose up -d`.
-4. Get the setup token from the log: `docker compose logs dulo | grep -i "setup token"`.
+4. Get the setup token from the log (you might need to give the server a few seconds to start):
+   `docker compose logs dulo | grep -i "setup token"`.
 5. Open `https://dulo.XXXXXX.ts.net` and follow the setup: it asks for the token, has you sign in
    with Pocket ID (you become the tree's administrator), and creates the tree.
 
